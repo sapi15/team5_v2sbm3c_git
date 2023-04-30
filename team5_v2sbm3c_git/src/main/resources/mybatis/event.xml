@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.event.EventDAOInter"> 
+<!-- 등록 -->
+  <insert id="create" parameterType="dev.mvc.event.EventVO">
+   INSERT INTO event(eventno,  title, contents,  file1, file1saved, size1, thumb, rdate)
+   VALUES(event_seq.nextval, #{title}, #{contents}, #{file1}, #{file1saved}, #{size1}, #{thumb}, sysdate)
+  </insert>
+ <!-- 목록 -->
+  <select id="list" resultType="dev.mvc.event.EventVO" parameterType="int">
+  SELECT eventno, title, contents, file1, file1saved, thumb, size1, rdate
+  FROM event
+  ORDER BY eventno DESC
+  </select>
+  
+  <!-- 6개 조회 -->
+   <select id="read_index"  resultType="dev.mvc.event.EventVO" >
+      SELECT eventno,  title, contents,  file1, file1saved, size1, thumb, rdate, r
+      FROM(
+        SELECT eventno,  title, contents,  file1, file1saved, size1, thumb, rdate,  rownum as r 
+        FROM(
+                SELECT   eventno,  title, contents,  file1, file1saved, size1, thumb, rdate
+                FROM event
+                ORDER BY eventno DESC
+                )
+            )
+   WHERE <![CDATA[ r >= 1 AND r <= 6 ]]>
+   </select>
+  
+ <!-- 검색 -->
+ <select id="list_search" resultType="dev.mvc.event.EventVO" parameterType="HashMap">
+  SELECT eventno, title, contents, file1, file1saved, thumb, size1, rdate
+  FROM event
+  <choose>
+    <when test="word==null or word==''">
+  
+     </when>
+     <otherwise>
+      WHERE <!--  title LIKE CONCAT('%', #{word}, '%') 
+                 OR contents LIKE CONCAT('%', #{word}, '%') -->
+
+       (title LIKE '%' || #{word} || '%' OR contents LIKE '%' || #{word}||'%' ) 
+     </otherwise>
+  </choose>
+  ORDER BY eventno DESC
+ </select>
+ 
+   <!-- 검색갯수 -->
+   <select id="search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM event
+    <choose>
+      <when test="word == null or word =='' ">
+<!--         WHERE title LIKE CONCAT('%', #{word}, '%') 
+                 OR contents LIKE CONCAT('%', #{word}, '%')
+       -->
+       WHERE    (title LIKE '%' || #{word} || '%' OR contents LIKE '%' || #{word}||'%' )
+      </when>
+    </choose>
+   </select>
+   
+   <!-- 조회 -->
+   <select id="read" resultType="dev.mvc.event.EventVO" parameterType="int">
+    SELECT eventno, title, contents, file1, file1saved, thumb, size1, rdate
+    FROM event
+    WHERE eventno=#{eventno}
+   </select>
+   
+   <!-- 수정 -->
+   <update id="update" parameterType="dev.mvc.event.EventVO">
+    UPDATE event
+    SET title=#{title}, contents=#{contents}, file1=#{file1}, file1saved=#{file1saved}, thumb=#{thumb}, size1=#{size1}
+    WHERE eventno=#{eventno}
+   </update>
+   
+   <!-- 삭제 -->
+   <delete id="delete" parameterType="int">
+      DELETE FROM event
+      WHERE eventno=#{eventno}
+   </delete>
+</mapper> 
+   

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.myroom.MyroomDAOInter">
+
+  <!-- 보관함 저장 -->
+  <insert id="create" parameterType="dev.mvc.myroom.MyroomVO">
+    INSERT INTO myroom(myroomno, memberno, contentsno, rdate)
+    VALUES(myroom_seq.nextval, #{memberno}, #{contentsno}, sysdate)
+  </insert>
+  
+  <!-- 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM myroom
+    WHERE myroomno=#{myroomno}
+  </delete>
+  
+  <!-- 보관함 목록 -->
+  <select id="list_by_memberno" resultType="dev.mvc.myroom.MyroomVO" parameterType="int">
+    SELECT m.myroomno, m.memberno, m.contentsno, m.rdate,
+               c.title, c.content, c.thumb1, c.price, c.saleprice, c.dc, c.point
+    FROM myroom m, contents c
+    WHERE m.memberno = #{memberno} AND m.contentsno = c.contentsno
+    ORDER BY myroomno DESC
+  </select>
+
+
+
+</mapper>

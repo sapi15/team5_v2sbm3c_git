@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="dev.mvc.faq.FaqDAOInter">
+  <insert id="create" parameterType="dev.mvc.faq.FaqVO">
+    INSERT INTO faq(faqgrpno, faqno, title, answer)
+    VALUES(#{faqgrpno}, faq_seq.nextval, #{title}, #{answer})
+  </insert>
+  
+  <select id="list_by_faqgrpno" parameterType="int" resultType="dev.mvc.faq.FaqVO">
+    SELECT faqgrpno, faqno, title, answer
+    FROM faq
+    WHERE faqgrpno=#{faqgrpno}
+    ORDER BY faqno DESC
+  </select>
+  
+  <select id="list_join" resultType="dev.mvc.faq.Faqgrp_FaqVO">
+    SELECT r.faqgrpno as r_faqgrpno, r.name as r_name,
+           c.faqno, c.faqgrpno, c.title, c.answer
+    FROM faqgrp r, faq c
+    WHERE r.faqgrpno = c.faqgrpno
+    ORDER BY faqgrpno ASC, faqno ASC
+  </select>
+  
+  <select id="read" resultType="dev.mvc.faq.FaqVO" parameterType="int">
+    SELECT faqno, faqgrpno, title, answer
+    FROM faq
+    WHERE faqno=#{faqno}
+  </select>
+
+
+   <update id="update" parameterType="dev.mvc.faq.FaqVO">
+    UPDATE faq
+    SET title=#{title}, answer=#{answer}
+    WHERE faqno=#{faqno}
+   </update>
+
+
+   <delete id="delete" parameterType="int">
+    DELETE FROM faq
+    WHERE faqno=#{faqno}
+   </delete>
+</mapper>

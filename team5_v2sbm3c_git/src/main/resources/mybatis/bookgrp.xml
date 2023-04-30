@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.bookgrp.BookgrpDAOInter"> 
+<!-- 등록 -->
+  <insert id="create" parameterType="dev.mvc.bookgrp.BookgrpVO">
+    INSERT INTO bookgrp(bookgrpno, grpname, seqno,rdate)
+    VALUES(bookgrp_seq.nextval, #{grpname}, #{seqno}, sysdate)
+  </insert>
+<!-- 목록 -->
+  <select id="list_bookgrpno_asc" resultType="dev.mvc.bookgrp.BookgrpVO">
+    SELECT bookgrpno, grpname, seqno,rdate
+    FROM bookgrp
+    ORDER BY bookgrpno ASC
+  </select>
+  
+   <select id="list_seqno_asc" resultType="dev.mvc.bookgrp.BookgrpVO">
+    SELECT  bookgrpno, grpname, seqno,rdate
+    FROM bookgrp
+    ORDER BY seqno ASC
+  </select>
+<!-- 조회 -->
+  <select id="read" resultType="dev.mvc.bookgrp.BookgrpVO" parameterType="int">
+    SELECT bookgrpno, grpname, seqno,rdate
+    FROM bookgrp
+    WHERE bookgrpno=#{bookgrpno}
+  </select>
+ 
+  <!-- 수정 -->
+  <update id="update" parameterType="dev.mvc.bookgrp.BookgrpVO">
+    UPDATE bookgrp
+    SET grpname=#{grpname},seqno=#{seqno}
+    WHERE bookgrpno = #{bookgrpno}
+  </update>
+ 
+  <!-- 삭제  -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM bookgrp
+    WHERE bookgrpno=#{bookgrpno}
+  </delete>
+</mapper> 

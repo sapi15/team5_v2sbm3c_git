@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.book.BookDAOInter">
+
+  <insert id="create" parameterType="dev.mvc.book.BookVO">
+      INSERT INTO book(bookno, bookgrpno, bookname, rdate)
+      VALUES(book_seq.nextval, #{bookgrpno},#{bookname}, sysdate)
+  </insert> 
+  
+  <!-- 전체 목록-->
+  <select id="list_all" resultType="dev.mvc.book.BookVO">
+    SELECT bookno, bookgrpno, bookname, rdate
+    FROM book
+    ORDER BY bookno ASC
+  </select>
+
+  <!-- 카테고리 그룹별 목록 -->
+  <select id="list_by_bookgrpno" resultType="dev.mvc.book.BookVO" parameterType="int">
+    SELECT bookno, bookgrpno, bookname, rdate
+    FROM book
+    WHERE bookgrpno = #{bookgrpno}
+    ORDER BY bookno ASC
+  </select>
+
+  <!-- Bookgrp + Book join, 연결 목록 -->
+  <select id="list_all_join" resultType="dev.mvc.book.Bookgrp_BookVO">
+    SELECT r.bookgrpno as r_bookgrpno, r.grpname as r_grpname,
+               c.bookno, c.bookgrpno, c.bookname, c.rdate
+    FROM bookgrp r, book c
+    WHERE r.bookgrpno = c.bookgrpno
+    ORDER BY bookgrpno ASC, bookno ASC
+  </select>
+  
+  <!-- 조회, id: read, 입력: cateno, 리턴: CateVO -->
+  <select id="read" resultType="dev.mvc.book.BookVO" parameterType="int">
+    SELECT bookno, bookgrpno, bookname, rdate
+    FROM book
+    WHERE bookno=#{bookno}
+  </select>  
+  
+  <update id="update" parameterType="dev.mvc.book.BookVO">
+    UPDATE book
+    SET bookgrpno=#{bookgrpno}, bookname=#{bookname}
+    WHERE bookno = #{bookno}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+    DELETE FROM book
+    WHERE bookno=#{bookno}
+  </delete>
+  
+  <!-- 특정 그룹에 속한 레코드 갯수 산출 -->
+  <select id="count_by_bookgrpno" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt 
+    FROM book 
+    WHERE bookgrpno=#{bookgrpno}
+  </select>  
+  
+  <!-- bookgrpno가 같은 모든 레코드 삭제 -->
+  <delete id="delete_by_bookgrpno" parameterType="int">
+    DELETE FROM book
+    WHERE bookgrpno=#{bookgrpno}
+  </delete>
+  
+</mapper>
+

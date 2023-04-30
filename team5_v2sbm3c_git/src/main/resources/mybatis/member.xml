@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.member.MemberDAOInter">
+
+  <!-- 회원가입 -->
+  <insert id="create" parameterType="dev.mvc.member.MemberVO">
+    INSERT INTO member(memberno, name, id, passwd, email1, email2, email_yn, 
+                                    postcode, address1, address2, tel, rdate, grade)
+    VALUES(member_seq.nextval, #{name}, #{id}, #{passwd}, #{email1}, #{email2}, #{email_yn},
+                #{postcode}, #{address1}, #{address2}, #{tel}, sysdate, #{grade})
+  </insert>
+  
+  <!-- ID중복확인 -->
+  <select id="checkID" resultType="int" parameterType="String">
+    SELECT COUNT(id) as cnt
+    FROM member
+    WHERE id=#{id}
+  </select>
+  
+  <!-- memberno로 회원 정보 조회 -->
+  <select id="read" resultType="dev.mvc.member.MemberVO" parameterType="int">
+    SELECT memberno, name, id, passwd, email1, email2, email_yn, postcode, address1, address2, tel, rdate, grade
+    FROM member
+    WHERE memberno = #{memberno}
+  </select>  
+
+  <!-- id로 회원 정보 조회 -->
+  <select id="readById" resultType="dev.mvc.member.MemberVO" parameterType="String">
+    SELECT memberno, name, id, passwd, email1, email2, email_yn, postcode, address1, address2, tel, rdate, grade
+    FROM member
+    WHERE id = #{id}
+  </select>
+  
+  <!-- 로그인 -->
+  <select id="login" resultType="int" parameterType="Map">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE id=#{id} AND passwd=#{passwd}
+  </select>
+  
+  <!-- 회원 목록  -->
+  <select id="list" resultType="dev.mvc.member.MemberVO">
+    SELECT memberno, name, id, passwd, email1, email2, email_yn, postcode, address1, address2, tel, rdate, grade
+    FROM member
+    ORDER BY memberno ASC
+  </select>
+  
+  <!-- 회원 정보 수정 -->
+  <update id="update" parameterType="dev.mvc.member.MemberVO">
+    UPDATE member
+    SET  postcode=#{postcode}, address1=#{address1}, address2=#{address2}, tel=#{tel},
+           email1=#{email1}, email2=#{email2}, email_yn=#{email_yn}
+    WHERE memberno = #{memberno}
+  </update>
+  
+  <!-- 회원 삭제 -->
+  <delete id="delete" parameterType="int">
+   DELETE FROM member
+   WHERE memberno=#{memberno}
+  </delete>
+  
+  <!-- 현재 패스워드 검사 -->
+  <select id="passwd_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE memberno=#{memberno} AND passwd=#{passwd}
+  </select>
+  
+  <!-- 패스워드 변경 -->
+  <update id="passwd_update" parameterType="HashMap">
+    UPDATE member
+    SET passwd=#{passwd}
+    WHERE memberno=#{memberno}
+  </update>
+  
+  <!-- id찾기 전 memberno 추출 -->
+  <select id="id_memberno_check" parameterType="HashMap" resultType="int">
+    SELECT memberno
+    FROM member
+    WHERE name=#{name} AND email1=#{email1} AND email2=#{email2}
+  </select>
+  
+  <!-- id찾기 전 정보 검사 -->
+  <select id="id_personal_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE name=#{name} AND email1=#{email1} AND email2=#{email2}
+  </select>
+  
+  <!-- id 찾기  -->
+  <select id="id_find" parameterType="int" resultType="String">
+    SELECT id
+    FROM member
+    WHERE  memberno=#{memberno}
+  </select>
+  
+  <!-- passwd찾기 전 정보 memberno추출 -->
+  <select id="passwd_memberno_check" parameterType="HashMap" resultType="int">
+    SELECT memberno
+    FROM member
+    WHERE name=#{name} AND id=#{id} AND email1=#{email1} AND email2=#{email2}
+  </select>
+  
+  <!-- passwd찾기 전 정보 검사 -->
+  <select id="passwd_personal_check" parameterType="HashMap" resultType="int">
+    SELECT COUNT(memberno) as cnt
+    FROM member
+    WHERE name=#{name} AND id=#{id} AND email1=#{email1} AND email2=#{email2}
+  </select>
+  
+  <!-- passwd 찾기  -->
+  <select id="passwd_find" parameterType="int" resultType="String">
+    SELECT passwd
+    FROM member
+    WHERE  memberno=#{memberno}
+  </select>
+  
+  <!-- 회원 등급변경 -->
+  <update id="grade_update" parameterType="HashMap">
+    UPDATE member
+    SET grade=#{grade}
+    WHERE memberno=#{memberno}
+  </update>
+  
+
+  
+
+
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.faqgrp.FaqgrpDAOInter"> 
+  <insert id="create" parameterType="dev.mvc.faqgrp.FaqgrpVO">
+    INSERT INTO faqgrp(faqgrpno, name)
+    VALUES(faqgrp_seq.nextval, #{name})
+  </insert>
+ 
+ <select id="list" resultType="dev.mvc.faqgrp.FaqgrpVO">
+    SELECT faqgrpno,  name
+    FROM faqgrp
+    ORDER BY faqgrpno ASC
+ </select>
+ 
+ <select id="read" resultType="dev.mvc.faqgrp.FaqgrpVO" parameterType="int">
+  SELECT faqgrpno, name
+  FROM faqgrp
+  WHERE faqgrpno=#{faqgrpno}
+ </select>
+ 
+ <update id="update" parameterType="dev.mvc.faqgrp.FaqgrpVO">
+    UPDATE faqgrp
+    SET name=#{name}
+    WHERE faqgrpno=#{faqgrpno}
+ </update>
+   
+ <delete id="delete" parameterType="int">
+  DELETE FROM faqgrp
+  WHERE faqgrpno = #{faqgrpno}
+ </delete>
+</mapper> 
+   

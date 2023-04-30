@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.notice.NoticeDAOInter"> 
+<!-- 등록 -->
+  <insert id="create" parameterType="dev.mvc.notice.NoticeVO">
+  INSERT INTO notice(noticeno, title, contents, rdate, views)
+  VALUES(notice_seq.nextval, #{title}, #{contents}, sysdate, #{views})
+  </insert>
+  
+  
+ <!-- 목록 -->
+  <select id="list" resultType="dev.mvc.notice.NoticeVO" parameterType="int">
+  SELECT noticeno,  title, contents, rdate, views
+  FROM notice
+  ORDER BY noticeno DESC
+  </select>
+  
+  <!-- 조회 -->
+  <select id="read" resultType="dev.mvc.notice.NoticeVO" parameterType="int">
+    SELECT noticeno,  title, contents, rdate, views
+    FROM notice
+    WHERE noticeno=#{noticeno}
+  </select>
+  
+  <!-- 수정 -->
+  <update id="update" parameterType="dev.mvc.notice.NoticeVO">
+    UPDATE notice
+    SET title=#{title}, contents=#{contents}
+    WHERE noticeno=#{noticeno}
+  </update>
+  
+  <!-- 삭제 -->
+  <delete id="delete" parameterType="int">
+     DELETE FROM notice
+     WHERE noticeno=#{noticeno}
+  </delete>
+</mapper> 
+   
